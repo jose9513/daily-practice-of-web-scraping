@@ -416,7 +416,7 @@ pp(nombre_articulos_joyeria)
 """
 
 
-
+"""
 import csv
 
 leads = [["Empresa A", "gerente@a.com"], ["Empresa B", "ventas@b.com"]]
@@ -432,3 +432,96 @@ with open("contactos_b2b.csv", mode="w", newline="", encoding="utf-8") as archiv
         escritor.writerow(lead)
         
 print("se agregaron toda la imformacion correctamente")
+"""
+
+#miercoles 4 de marzo
+
+"""
+import requests
+import json
+import csv
+
+url_api = "https://fakestoreapi.com/products/category/jewelery"
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows Nt 10.0; Win64; x64) Chrome/120.0"
+}
+
+res = requests.get(url_api, headers=headers)
+datos_json = res.json()
+
+costeo_joyas = []
+
+for producto in datos_json:
+    
+    nombre = producto.get('title', "no se encontro el nombre de este producto")
+    categoria = producto.get('category', "no se pudo encontrar la categoria de este producto")
+    precio_original = producto.get('price', "no se pudo encontrar el precio de este producto")
+    precio_soles = round(precio_original * 3.7, 2)
+    
+    if categoria.lower() == "jewelery":
+        
+        datos_joyas = [nombre, precio_original, precio_soles]
+        costeo_joyas.append(datos_joyas)
+        
+with open("presupuesto_soles.csv", mode="w", newline="", encoding="utf-8") as archivo:
+    
+    escritor = csv.writer(archivo)
+    
+    escritor.writerow(["nombre del producto", "precio en dolares", "precio en soles"])
+    
+    for joya in costeo_joyas:
+        
+        escritor.writerow(joya)
+        print("agregando un nuevo producto al .csv")
+        
+print("se agregaron todos los productos de joyas a la hoja .csv")
+"""
+
+
+
+"""
+import requests
+import json
+
+datos_crudos = [
+    {"nombre": "Juan", "info": {"telefono": "123"}},
+    {"nombre": "Ana"},
+    {"nombre": "Luis", "info": {}}
+]
+
+datos_limpios = []
+
+for datos in datos_crudos:
+    
+    nombre = datos.get("nombre", "no se encontro el nombre de la persona")
+    telefono = datos.get("info", {}).get("telefono", "no se encontro el telefono de la persona")
+    
+    datos_limpios.append([nombre, telefono])
+    
+from pprint import pprint as pp
+pp(datos_limpios)
+"""
+
+import requests
+
+# 1. La URL directa de la imagen (termina en .jpg)
+url_imagen = "https://i.pinimg.com/736x/60/7c/8d/607c8df612fb359ba2c3291b64bd0c10.jpg"
+
+print("Descargando imagen del servidor...")
+
+# 2. Hacemos la petición normal
+respuesta = requests.get(url_imagen)
+
+# 3. Verificamos que todo salió bien (Status 200 significa OK)
+if respuesta.status_code == 200:
+    
+    # 4. Magia aquí: abrimos el archivo en modo "wb" (Write Binary)
+    with open("anillo_proveedor.jpg", mode="wb") as archivo:
+        
+        # 5. Escribimos el contenido "crudo" (ceros y unos)
+        archivo.write(respuesta.content)
+        
+    print("✅ ¡Éxito! Abre la carpeta de tu código y busca 'anillo_proveedor.jpg'.")
+else:
+    print(f"❌ Error al descargar: {respuesta.status_code}")
