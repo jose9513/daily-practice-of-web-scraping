@@ -503,6 +503,9 @@ from pprint import pprint as pp
 pp(datos_limpios)
 """
 
+
+
+"""
 import requests
 
 # 1. La URL directa de la imagen (termina en .jpg)
@@ -525,3 +528,32 @@ if respuesta.status_code == 200:
     print("✅ ¡Éxito! Abre la carpeta de tu código y busca 'anillo_proveedor.jpg'.")
 else:
     print(f"❌ Error al descargar: {respuesta.status_code}")
+"""
+
+
+
+
+import requests
+import json
+import csv
+
+url_api = "https://fakestoreapi.com/products/category/jewelery"
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows Nt 10.0; Win64; x64) Chrome/120.0"
+}
+
+res = requests.get(url_api, headers=headers)
+datos_json = res.json()
+
+catalogo_final = []
+
+for joyas in datos_json:
+    nombre = joyas.get("title", "no se pudo encontrar el nombre de la joya")
+    precio = joyas.get("price", "no se pudo encontrar el precio de la joya")
+    imagen = joyas.get("image", "no se pudo encontrar la imagen de la joya")
+    
+    catalogo_final.append([nombre, precio, imagen])
+    
+from pprint import pprint as pp
+pp(catalogo_final)
