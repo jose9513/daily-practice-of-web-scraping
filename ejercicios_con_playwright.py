@@ -96,7 +96,7 @@ login_automatico()
 
 
 
-
+"""
 from playwright.sync_api import sync_playwright
 
 print("Iniciando motor...")
@@ -106,10 +106,34 @@ with sync_playwright() as p:
     pagina = navegador.new_page()
     
     print("Viajando a Wikipedia...")
-    pagina.goto("https://es.pinterest.com/pin/946952259163906030/")
+    pagina.goto("https://es.wikipedia.org/wiki/Filosofía")
     
     print("📸 Tomando foto...")
     # Esta es la magia de Playwright en 1 línea
     pagina.screenshot(path="foto_filosofia.png") 
     
     print("✅ ¡Foto guardada en tu carpeta!")
+    """
+    
+
+
+
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=False)
+    pagina = navegador.new_page()
+    pagina.goto("https://quotes.toscrape.com/")
+    print("2. Haciendo clic en el botón Login...")
+    pagina.locator("text=Login").click()
+    print("3. Pausa para que veas que cambió de página...")
+    pagina.wait_for_timeout(3000)
+    
+    print("4. ingresando usuario y contraseña en la pagina de login...")
+    pagina.locator("#username").fill("aporia_admin")
+    pagina.locator("#password").fill("filosofia123")
+    
+    print("5. dandole click al boton de submit par aingresar a la pagina...")
+    pagina.locator("input[type='submit']").click()
+    
+    pagina.wait_for_timeout(3000)
