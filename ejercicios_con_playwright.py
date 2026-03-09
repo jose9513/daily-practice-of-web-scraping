@@ -160,6 +160,9 @@ with sync_playwright() as p:
     pagina.wait_for_timeout(3000)
 """
 
+#lunes 9 de marzo
+
+"""
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
@@ -173,3 +176,25 @@ with sync_playwright() as p:
     
     print("se logro robar la primera frase")
     print(f"{frase_robada}")
+    """
+    
+    
+    
+    
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=True)
+    
+    pagina = navegador.new_page()
+    pagina.goto("https://quotes.toscrape.com/")
+    
+    print("obteniendo todas las frases de la pagina")
+    todas_las_frases = pagina.locator(".text").all_inner_texts()
+    
+    cantidad = len(todas_las_frases)
+    
+    print(f"se logro obtener {cantidad} frases en total")
+    
+    for i in todas_las_frases:
+        print(f"{i}")
