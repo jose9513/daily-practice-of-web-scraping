@@ -224,9 +224,9 @@ with sync_playwright() as p:
         print("---------------------------------------------")
 """
 
-#ejercicio que captura el primer texto de cada pagina del link
+#ejercicio que captura el primer texto de las primeras 2 paginas del link
 
-
+"""
 from playwright.sync_api import sync_playwright
 
 with sync_playwright() as p:
@@ -246,3 +246,55 @@ with sync_playwright() as p:
     print(f"esta es la segunda frase: {segunda_frase}")
     
     print("se obtuvieron las primeras frases de las 2 paginas")
+"""
+
+#ejercicio que captura todos los datos de todas las paginas de la url
+
+
+from playwright.sync_api import sync_playwright
+import csv
+
+todos_los_datos = []
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=True)
+    
+    pagina = navegador.new_page()
+    pagina.goto("https://quotes.toscrape.com/")
+    
+    pagina_actual = 1
+    
+    while True:
+        print(f"obteniendo los datos de la pagina {pagina_actual}")
+        
+        lista_frases = pagina.locator(".text").all_inner_texts()
+        lista_autores = pagina.locator(".author").all_inner_texts()
+        
+        for i in range(len(lista_frases)):
+            todos_los_datos.append([lista_frases[i], lista_autores[i]])
+            
+        boton_siguiente_pagina = pagina.locator(".next > a")
+        
+        if boton_siguiente_pagina.is_visible():
+            boton_siguiente_pagina.click()
+            pagina_actual += 1
+        else:
+            print("no hay un boton para la siguiente pagina, terminando el programa...")
+            break
+        
+print("\n============================================================================================================")
+print("Extraccion masiva de datos completada")
+print(f"total de frases extraidas en la base de datos: {len(todos_los_datos)}")
+print("===============================================================================================================")
+
+print("muestra de la lista de diccionarios")
+print(todos_los_datos[0])
+print(todos_los_datos[1])
+
+with open("lista_frases_autores.csv", mode="w", newline="", encoding="utf-8") as archivo:
+    escritor = csv.writer(archivo)
+    
+    escritor.writerow(["todas las frases", "autores"])
+    escritor.writerows(todos_los_datos)
+    
+print("se agregaron todas las frases y sus autores a un archivo .csv")
