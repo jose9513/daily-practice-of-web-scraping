@@ -303,7 +303,7 @@ print("se agregaron todas las frases y sus autores a un archivo .csv")
 #martes 10 de marzo
 #ejercicio para loguearse en una pagina y guardar la coockie
 
-
+"""
 from playwright.sync_api import sync_playwright
 
 def guardar_sesion():
@@ -324,4 +324,60 @@ def guardar_sesion():
         pagina.wait_for_timeout(3000)
         
 guardar_sesion()
+"""
 
+#ejercicio para usar la cookie que se guardo para acceder a la pagina sin necesidad de ingresar usuario y contraseña
+
+"""
+from playwright.sync_api import sync_playwright
+
+def entrar_con_coockie():
+    with sync_playwright() as p:
+        navegador = p.chromium.launch(headless=False)
+        
+        contexto = navegador.new_context(storage_state='estado_sesion.json')
+        
+        pagina = contexto.new_page()
+        pagina.goto("https://quotes.toscrape.com/")
+        
+        pagina.wait_for_timeout(5000)
+        
+entrar_con_coockie()
+"""
+
+#ejercicio para agarrar la coockie que guardamos antes y usarla para acceder a la misma pagina web sin usuario ni contraseña, si no funciona entonces ingresamos con usuario y contraseña y reemplazamos la coockie anterior por la nueva
+
+
+import os
+from playwright.sync_api import sync_playwright
+
+archivo_sesion = "estado_sesion.json"
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=False, slow_mo=500)
+    
+    if os.path.exists(archivo_sesion):
+        print("llave encontrada, intentando entrar a la pagina")
+        contexto = navegador.new_context(storage_state=archivo_sesion)
+        
+    else:
+        print("no se encontro la llave, creando una nueva")
+        contexto = navegador.new_context()
+        
+    pagina = contexto.new_page()
+    pagina.goto("https://quotes.toscrape.com/")
+    
+    boton_login = pagina.locator("text=login")
+    
+    if boton_login.is_visible():
+        boton_login.click()
+        pagina.locator("#username").fill("aporia_admin")
+        pagina.locator("#password").fill("filosofia123")
+        pagina.locator("input[type='submit']").click()
+        
+        contexto.storage_state(path=archivo_sesion)
+        
+    else:
+        print("se consiguio entrar a la pagina con la coockie obtenida en el pasado")
+        
+    pagina.wait_for_timeout(4000)
