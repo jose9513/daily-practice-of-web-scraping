@@ -386,7 +386,7 @@ with sync_playwright() as p:
 #miercoles 11 de marzo
 #ejercicio para entrar a otra pagina que tiene mejor seguridad que la anterior
 
-
+"""
 import os
 from playwright.sync_api import sync_playwright
 
@@ -423,3 +423,79 @@ with sync_playwright() as p:
     print(f"primer producto en pantalla: {primer_producto}")
 
     pagina.wait_for_timeout(3000)
+"""
+
+#jueves 12 de marzo
+
+"""
+from playwright.sync_api import sync_playwright
+
+# 1. Construimos nuestro "Audífono de Espía"
+# Esta función se activará sola cada vez que el servidor envíe CUALQUIER COSA a tu computadora
+def capturar_trafico(respuesta):
+    # La web descarga cientos de imágenes y basura. 
+    # Solo queremos interceptar las llamadas tipo "fetch" o "xhr" (donde viven los JSON)
+    if respuesta.request.resource_type in ["fetch", "xhr"]:
+        print(f"📡 API Detectada en: {respuesta.url}")
+        print(f"   Estado: {respuesta.status}")
+        print("-" * 50)
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=False, slow_mo=500)
+    contexto = navegador.new_context()
+    pagina = contexto.new_page()
+    
+    # 2. 🎯 LA MAGIA: Conectamos el radar a la página ANTES de navegar
+    pagina.on("response", capturar_trafico)
+    
+    print("🚀 Entrando a la búsqueda de empleos y prendiendo el radar...\n")
+    
+    # Entramos directamente a la sección de tecnología
+    pagina.goto("https://pe.computrabajo.com/trabajo-de-python")
+    
+    # Pausa de 10 segundos para que te dé tiempo de ver la página
+    # y para que el radar termine de capturar todos los paquetes rezagados
+    pagina.wait_for_timeout(10000)
+    
+    print("\n✅ Escaneo de red finalizado.")
+    """
+    
+
+
+
+from playwright.sync_api import sync_playwright
+
+# 1. Creamos nuestro "Audífono de Espía"
+def capturar_trafico(respuesta):
+    # Filtramos: Solo queremos URLs con "offer/" y que hayan sido exitosas (Status 200)
+    if "offer/" in respuesta.url and respuesta.status == 200:
+        print(f"\n🎯 ¡Blanco fijado! URL interceptada: {respuesta.url}")
+        
+        try:
+            # 📦 LA MAGIA: Convertimos la respuesta de la web en un Diccionario de Python
+            datos = respuesta.json()
+            
+            # Imprimimos solo un fragmento para no inundar toda tu pantalla
+            print("💎 ¡Tesoro extraído! Aquí están los datos ocultos:")
+            print(str(datos)[:400] + " ... [Datos cortados para resumir]")
+            print("-" * 60)
+            
+        except:
+            print("🔒 Falsa alarma: El paquete no era un JSON o estaba vacío.")
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=False)
+    pagina = navegador.new_page()
+    
+    # 2. Conectamos el radar ANTES de entrar a la web
+    pagina.on("response", capturar_trafico)
+    
+    print("🚀 Entrando a la página. Preparando radares...\n")
+    pagina.goto("https://pe.computrabajo.com/trabajo-de-python")
+    
+    print("👉 ¡Tu turno! Haz clic en 3 ofertas diferentes de la lista izquierda.")
+    
+    # Te doy 20 segundos para que hagas clic manualmente en las ofertas
+    pagina.wait_for_timeout(20000)
+    
+    print("\n✅ Intervención finalizada.")
