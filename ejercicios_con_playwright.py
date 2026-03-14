@@ -587,12 +587,24 @@ import time
 
 def capturar_api(respuesta):
     if respuesta.request.resource_type in ["fetch", "xhr"]:
-        basura = ["google_analytics", "telemetry", "clarity"]
-        
-        if not any(palabra in respuesta.url for palabra in basura):
-            print(f"Api detectada, {respuesta.url[:120]}")
-            print(f"tipo de paquete: {respuesta.headers.get('content-type', 'desconocido')}")
-            print("-" * 50)
+        if "napi/search" in respuesta.url or "napi/photos" in respuesta.url:
+            try:
+                datos = respuesta.json()
+                
+                lista_fotos = datos.get("results", [])
+                
+                if len(lista_fotos) > 0:
+                    print(f"paquete de {len(lista_fotos)} capturado")
+                    
+                    for foto in lista_fotos:
+                        link_imagen = foto.get('urls', {}).get('regular', 'sin link')
+                        fotografo = foto.get('user', {}).get('name', 'nonimo')
+                        
+                        print(f"📸 {fotografo}: {link_imagen}")
+                        
+                        print("-" * 60)
+            except:
+                pass
             
 with sync_playwright() as p:
     navegador = p.chromium.launch(headless=False, slow_mo=300)
