@@ -506,15 +506,18 @@ with sync_playwright() as p:
 
 from playwright.sync_api import sync_playwright
 import time
+import json
 
 def capturar_trafico(respuesta):
-    if "offer/" in respuesta.url and respuesta.status == 200:
+    if "oferta.computrabajo.com/offer/" in respuesta.url and respuesta.status == 200:
         try:
             datos = respuesta.json()
-            titulo = datos.get("title", "no se encontro el titulo")
-            empresa = datos.get("company", "no se encontro la empresa")
+            print(f"------------------- busca aqui las etiquetas del titulo y la empresa --------------")
             
-            print(f"dato interceptado -- {titulo} en {empresa}")
+            descripcion = datos.get("o", {}).get("ld", "sin descripcion")
+            
+            print(descripcion[:300] + " ... [CORTADO]")
+            print("-" * 60)
             
         except:
             pass
