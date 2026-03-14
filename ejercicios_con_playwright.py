@@ -462,7 +462,7 @@ with sync_playwright() as p:
     
 
 
-
+"""
 from playwright.sync_api import sync_playwright
 
 # 1. Creamos nuestro "Audífono de Espía"
@@ -499,3 +499,43 @@ with sync_playwright() as p:
     pagina.wait_for_timeout(20000)
     
     print("\n✅ Intervención finalizada.")
+"""
+
+#viernes 13 de noviembre
+
+
+from playwright.sync_api import sync_playwright
+import time
+
+def capturar_trafico(respuesta):
+    if "offer/" in respuesta.url and respuesta.status == 200:
+        try:
+            datos = respuesta.json()
+            titulo = datos.get("title", "no se encontro el titulo")
+            empresa = datos.get("company", "no se encontro la empresa")
+            
+            print(f"dato interceptado -- {titulo} en {empresa}")
+            
+        except:
+            pass
+        
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=False, slow_mo=500)
+    pagina = navegador.new_page()
+    
+    pagina.on("response", capturar_trafico)
+    
+    print(f"entrando a la web y buscando ofertas")
+    pagina.goto("https://pe.computrabajo.com/trabajo-de-python")
+    
+    ofertas = pagina.locator(".box_offer")
+    
+    cantidad = ofertas.count()
+    print(f"se encontraron {cantidad} ofertas. Iniciando extraccion automatica")
+    
+    for i in range(5):
+        print(f"bot haciendo click en la oferta {i + 1}")
+        
+        ofertas.nth(i).click()
+        
+        time.sleep(2)
