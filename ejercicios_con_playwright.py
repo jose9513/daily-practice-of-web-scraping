@@ -546,7 +546,7 @@ with sync_playwright() as p:
 
 #ejercicio para capturar las apis que pasan por tiktok
 
-
+"""
 from playwright.sync_api import sync_playwright
 import time
 
@@ -576,5 +576,43 @@ with sync_playwright() as p:
             time.sleep(2)
         else:
             break
+"""
+
+#sabado 14 de marzo
+#codigo para capturar la api de unsplash.com sin tener que ir a la pagina
+
+
+from playwright.sync_api import sync_playwright
+import time
+
+def capturar_api(respuesta):
+    if respuesta.request.resource_type in ["fetch", "xhr"]:
+        basura = ["google_analytics", "telemetry", "clarity"]
         
-    pagina.wait_for_timeout(5000)
+        if not any(palabra in respuesta.url for palabra in basura):
+            print(f"Api detectada, {respuesta.url[:120]}")
+            print(f"tipo de paquete: {respuesta.headers.get('content-type', 'desconocido')}")
+            print("-" * 50)
+            
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=False, slow_mo=300)
+    pagina = navegador.new_page()
+    
+    pagina.on("response", capturar_api)
+    
+    pagina.goto("https://unsplash.com/es/s/fotos/tecnologia")
+    
+    time.sleep(3)
+    
+    boton_continuar = pagina.locator("button", has_text="Cargar más")
+    
+    for i in range(3):
+        if boton_continuar.is_visible():
+            boton_continuar.click()
+            time.sleep(1)
+            pagina.keyboard.press("End")
+            
+            time.sleep(3)
+        else:
+            pagina.keyboard.press("End")
+            time.sleep(3)
