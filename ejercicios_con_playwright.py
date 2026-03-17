@@ -581,7 +581,7 @@ with sync_playwright() as p:
 #sabado 14 de marzo
 #codigo para capturar la api de unsplash.com sin tener que ir a la pagina
 
-
+"""
 from playwright.sync_api import sync_playwright
 import time
 
@@ -628,3 +628,29 @@ with sync_playwright() as p:
         else:
             pagina.keyboard.press("End")
             time.sleep(3)
+"""
+
+#codigo para capturar los productos, precios y reseña del producto de una api
+
+
+from playwright.sync_api import sync_playwright
+import json
+
+with sync_playwright() as p:
+    navegador = p.chromium.launch(headless=True)
+    pagina = navegador.new_page()
+    
+    respuesta = pagina.goto("https://dummyjson.com/products/category/womens-jewellery")
+    
+    datos = respuesta.json()
+    productos = datos.get("products", [])
+    
+    if len(productos) > 0:
+        print(f"paquete de {len(productos)} productos capturados")
+        
+        for producto in productos:
+            nombre = producto.get("title", "no se encontro el titulo")
+            precio = producto.get("price", "no se encontro el precio")
+            rating = producto.get("rating", "no se encontro el rating")
+            
+            print(f"producto: {nombre} \nprecio: {precio} \nprimer comentario: {rating}")
