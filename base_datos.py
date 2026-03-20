@@ -1,3 +1,4 @@
+"""
 import sqlite3
 
 # 1. Creamos la CONEXIÓN (Si el archivo no existe, Python lo crea automáticamente)
@@ -25,3 +26,24 @@ conexion.commit()
 conexion.close()
 
 print("✅ Base de datos 'catalogo_bisuteria.db' creada exitosamente.")
+"""
+
+#jueves 19 de marzo
+
+
+import sqlite3
+
+conexion = sqlite3.connect("catalogo_bisuteria.db")
+
+cursor = conexion.cursor()
+
+print("se conecto exitosamente con la base de datos")
+
+comando_sql = "INSERT INTO productos VALUES (?, ?, ?)"
+
+datos_productos = ("collar de perlas sinteticas", 45.50, "muy elegante y ligero")
+
+cursor.execute(comando_sql, datos_productos)
+
+conexion.commit()
+conexion.close()
