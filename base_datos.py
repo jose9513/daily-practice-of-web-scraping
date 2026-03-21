@@ -30,7 +30,7 @@ print("✅ Base de datos 'catalogo_bisuteria.db' creada exitosamente.")
 
 #jueves 19 de marzo
 
-
+"""
 import sqlite3
 
 conexion = sqlite3.connect("catalogo_bisuteria.db")
@@ -47,3 +47,25 @@ cursor.execute(comando_sql, datos_productos)
 
 conexion.commit()
 conexion.close()
+"""
+
+
+# viernes 20 de marzo
+
+
+import sqlite3
+
+conexion = sqlite3.connect("catalogo_bisuteria.db")
+
+cursor = conexion.cursor()
+
+print("se conecto exitosamente con la base de datos")
+
+cursor.execute("SELECT * FROM productos")
+
+mis_datos = cursor.fetchall()
+
+for dato in mis_datos:
+    print(dato)
+    
+conexion.commit()
