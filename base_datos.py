@@ -52,7 +52,7 @@ conexion.close()
 
 # viernes 20 de marzo
 
-
+"""
 import sqlite3
 
 conexion = sqlite3.connect("catalogo_bisuteria.db")
@@ -68,4 +68,36 @@ mis_datos = cursor.fetchall()
 for dato in mis_datos:
     print(dato)
     
+conexion.close()
+"""
+
+#sabado 21 de marzo
+
+
+
+import sqlite3
+
+lote_nuevo = [
+    {"nombre": "Cadena de Eslabones 316L", "precio": 55.00, "comentario": "Baño PVD impecable"},
+    {"nombre": "Anillo Minimalista", "precio": 35.50, "comentario": "No se oxida con el agua"},
+    {"nombre": "Pulsera Ajustable", "precio": 42.00, "comentario": "Material muy resistente"}
+]
+
+conexion = sqlite3.connect("catalogo_bisuteria.db")
+
+cursor = conexion.cursor()
+
+for producto in lote_nuevo:
+    comando_sql = "INSERT INTO productos VALUES (?, ?, ?)"
+
+    datos_productos = (producto["nombre"], producto["precio"], producto["comentario"])
+    
+    cursor.execute(comando_sql, datos_productos)
+    
 conexion.commit()
+
+cursor.execute("SELECT * FROM productos")
+
+mis_datos = cursor.fetchall()
+
+conexion.close()
