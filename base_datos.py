@@ -1,3 +1,4 @@
+import sqlite3 as sql
 """
 import sqlite3
 
@@ -145,7 +146,7 @@ with sql.connect("catalogo_bisuteria.db") as conexion:
     print("se agrego un nuevo campo a la tabla de productos")
 """
 
-
+"""
 import sqlite3 as sql
 
 lote_joyas = [
@@ -192,3 +193,15 @@ def agregar_datos():
         
 if __name__ == "__main__":
     agregar_datos()
+"""
+
+
+with sql.connect("catalogo_bisuteria.db") as conexion:
+    cursor = conexion.cursor()
+    
+    comando = "SELECT * FROM joyas WHERE material = 'Plata 925' AND precio < 100"
+    cursor.execute(comando)
+    datos = cursor.fetchall()
+    
+    for dato in datos:
+        print(dato)
