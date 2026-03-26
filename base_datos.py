@@ -243,11 +243,23 @@ with sql.connect("catalogo_bisuteria.db") as conexion:
         print(dato)
 """
 
-
+"""
 with sql.connect("catalogo_bisuteria.db") as conexion:
     cursor = conexion.cursor()
     
     comando = "SELECT * FROM joyas WHERE stock BETWEEN 1 AND 5"
+    cursor.execute(comando)
+    
+    datos = cursor.fetchall()
+    for dato in datos:
+        print(dato)
+"""
+
+
+with sql.connect("catalogo_bisuteria.db") as conexion:
+    cursor = conexion.cursor()
+    
+    comando = "SELECT * FROM joyas WHERE categoria = 'Anillos' AND precio BETWEEN 1000 AND 3000"
     cursor.execute(comando)
     
     datos = cursor.fetchall()
