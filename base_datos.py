@@ -301,11 +301,23 @@ with sql.connect("catalogo_bisuteria.db") as conexion:
     print(f"el ingreso total de todas las joyas seria de: {dato[0][0]}")
 """
 
+"""
+with sql.connect("catalogo_bisuteria.db") as conexion:
+    cursor = conexion.cursor()
+    
+    comando = "SELECT categoria, COUNT(nombre) FROM joyas GROUP BY categoria"
+    cursor.execute(comando)
+    
+    datos = cursor.fetchall()
+    for dato in datos:
+        print(dato)
+"""
+
 
 with sql.connect("catalogo_bisuteria.db") as conexion:
     cursor = conexion.cursor()
     
-    comando = "SELECT categoria, SUM(stock) FROM joyas GROUP BY categoria"
+    comando = "SELECT material, AVG(precio) FROM joyas GROUP BY material"
     cursor.execute(comando)
     
     datos = cursor.fetchall()
