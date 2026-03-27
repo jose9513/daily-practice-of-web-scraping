@@ -255,7 +255,7 @@ with sql.connect("catalogo_bisuteria.db") as conexion:
         print(dato)
 """
 
-
+"""
 with sql.connect("catalogo_bisuteria.db") as conexion:
     cursor = conexion.cursor()
     
@@ -265,3 +265,15 @@ with sql.connect("catalogo_bisuteria.db") as conexion:
     datos = cursor.fetchall()
     for dato in datos:
         print(dato)
+"""
+
+
+with sql.connect("catalogo_bisuteria.db") as conexion:
+    cursor = conexion.cursor()
+    
+    comando = "SELECT SUM(stock) FROM joyas"
+    cursor.execute(comando)
+    
+    dato = cursor.fetchall()
+    
+    print(dato)
