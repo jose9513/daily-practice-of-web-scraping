@@ -474,5 +474,35 @@ def joyas_mas_caras_de_su_categoria():
         for dato in datos:
             print(dato)
             
+#-------------------------------------------------------------------------------------------------------
+
+def capital_alto_riesgo():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """SELECT categoria, SUM(precio * stock) as capital_inmovilizado
+                     FROM joyas
+                     WHERE precio > (SELECT AVG(precio) FROM joyas)
+                     GROUP BY categoria
+                     HAVING SUM(stock) > 3
+                     ORDER BY capital_inmovilizado DESC"""
+        cursor.execute(comando)
+        
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
+            
+#-------------------------------------------------------------------------------------------------------
+
+
+            
 if __name__ == "__main__":
-    joyas_mas_caras_de_su_categoria()
+    #modelos_menos_de_5()
+    #rentabilidad_material()
+    #dinero_inmovilizado()
+    #crear_tabla_ventas()
+    #joyas_mayor_al_promedio()
+    #joyas_menor_al_promedio_plata()
+    #joyas_sin_ventas()
+    #joyas_mas_caras_de_su_categoria()
+    capital_alto_riesgo()
