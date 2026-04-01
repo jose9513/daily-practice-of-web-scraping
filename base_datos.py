@@ -494,8 +494,39 @@ def capital_alto_riesgo():
             
 #-------------------------------------------------------------------------------------------------------
 
+def stock_basura():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """SELECT categoria, SUM(stock) as total_stock
+                     FROM joyas
+                     WHERE precio < (SELECT AVG(precio) FROM joyas)
+                     GROUP BY categoria
+                     HAVING total_stock > 10
+                     ORDER BY total_stock DESC"""
+        cursor.execute(comando)
+        
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
 
-            
+#-------------------------------------------------------------------------------------------------------
+
+def rentabilidad_por_categoria():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """SELECT categoria, SUM(precio * stock) as capital_inmovilizado
+                     FROM joyas
+                     WHERE id_joya NOT IN (SELECT id_joya FROM ventas)
+                     GROUP BY categoria
+                     ORDER BY capital_inmovilizado DESC"""
+        cursor.execute(comando)
+        
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
+
 if __name__ == "__main__":
     #modelos_menos_de_5()
     #rentabilidad_material()
@@ -505,4 +536,6 @@ if __name__ == "__main__":
     #joyas_menor_al_promedio_plata()
     #joyas_sin_ventas()
     #joyas_mas_caras_de_su_categoria()
-    capital_alto_riesgo()
+    #capital_alto_riesgo()
+    #stock_basura()
+    rentabilidad_por_categoria()
