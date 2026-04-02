@@ -544,6 +544,23 @@ def benchmark_global():
         datos = cursor.fetchall()
         for dato in datos:
             print(dato)
+            
+#-------------------------------------------------------------------------------------------------------
+
+def etiqueta_ultra_premium():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """SELECT nombre, categoria, precio
+                     FROM joyas
+                     WHERE precio > (SELECT AVG(precio) *2 FROM joyas)
+                     ORDER BY precio DESC"""
+                     
+        cursor.execute(comando)
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
+
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -557,4 +574,5 @@ if __name__ == "__main__":
     #capital_alto_riesgo()
     #stock_basura()
     #rentabilidad_por_categoria()
-    benchmark_global()
+    #benchmark_global()
+    etiqueta_ultra_premium()
