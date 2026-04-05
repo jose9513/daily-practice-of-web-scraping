@@ -635,7 +635,27 @@ def productos_fracasos():
         
         comando = """SELECT j.nombre, j.stock, v.fecha
                      FROM joyas j
-                     LEFT JOIN ventas v ON j.id_joya = v.id_joya"""
+                     LEFT JOIN ventas v ON j.id_joya = v.id_joya
+                     WHERE v.id_joya IS NULL AND j.stock > 0"""
+        cursor.execute(comando)
+        
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
+            
+def segmentacion_campañas():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """SELECT nombre, stock, 'Liquidacion' as tipo_campaña
+                     FROM joyas
+                     WHERE stock > 15
+                     
+                     UNION ALL
+                     
+                     SELECT nombre, stock, 'Premium' as tipo_campaña
+                     FROM joyas
+                     WHERE precio > 200"""
         cursor.execute(comando)
         
         datos = cursor.fetchall()
@@ -660,4 +680,5 @@ if __name__ == "__main__":
     #agujero_financiero()
     #reporte_transacciones()
     #reporte_ventas()
-    productos_fracasos()
+    #productos_fracasos()
+    segmentacion_campañas()
