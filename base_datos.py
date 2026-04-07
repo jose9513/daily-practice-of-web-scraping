@@ -643,6 +643,8 @@ def productos_fracasos():
         for dato in datos:
             print(dato)
             
+#-------------------------------------------------------------------------------------------------------
+            
 def segmentacion_campañas():
     with sql.connect("catalogo_bisuteria.db") as conexion:
         cursor = conexion.cursor()
@@ -656,6 +658,27 @@ def segmentacion_campañas():
                      SELECT nombre, stock, 'Premium' as tipo_campaña
                      FROM joyas
                      WHERE precio > 200"""
+        cursor.execute(comando)
+        
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
+            
+#-------------------------------------------------------------------------------------------------------
+
+def semaforo_inventario():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """SELECT nombre, stock, 'reestablecer stock' as estado
+                     FROM joyas
+                     WHERE stock < 5
+                     
+                     UNION ALL
+                     
+                     SELECT nombre, stock, 'stock suficiente' as estado
+                     FROM joyas
+                     WHERE stock BETWEEN 5 AND 15 """
         cursor.execute(comando)
         
         datos = cursor.fetchall()
@@ -681,4 +704,5 @@ if __name__ == "__main__":
     #reporte_transacciones()
     #reporte_ventas()
     #productos_fracasos()
-    segmentacion_campañas()
+    #segmentacion_campañas()
+    semaforo_inventario()
