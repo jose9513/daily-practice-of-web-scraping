@@ -684,6 +684,16 @@ def semaforo_inventario():
         datos = cursor.fetchall()
         for dato in datos:
             print(dato)
+            
+#-------------------------------------------------------------------------------------------------------
+
+def creando_indice():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = "CREATE INDEX IF NOT EXISTS idx_ventas_joya ON ventas(id_joya)"
+        cursor.execute(comando)
+        print("Índice creado exitosamente para optimizar consultas entre ventas y joyas")
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -705,4 +715,5 @@ if __name__ == "__main__":
     #reporte_ventas()
     #productos_fracasos()
     #segmentacion_campañas()
-    semaforo_inventario()
+    #semaforo_inventario()
+    creando_indice()
