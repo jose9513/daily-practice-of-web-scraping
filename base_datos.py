@@ -695,6 +695,8 @@ def creando_indice():
         cursor.execute(comando)
         print("Índice creado exitosamente para optimizar consultas entre ventas y joyas")
         
+        conexion.commit()
+        
 #-------------------------------------------------------------------------------------------------------
 
 def buscador_web():
@@ -704,6 +706,30 @@ def buscador_web():
         comando = """CREATE INDEX IF NOT EXISTS idx_busqueda_nombre ON joyas(nombre)"""
         cursor.execute(comando)
         print("Índice creado exitosamente para optimizar búsquedas por nombre")
+        
+        conexion.commit()
+        
+#-------------------------------------------------------------------------------------------------------
+
+def vista_catalogo_publico():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """CREATE VIEW IF NOT EXISTS catalogo_publico AS
+                     SELECT nombre, precio, categoria
+                     FROM joyas
+                     WHERE stock > 0 AND precio > 0;"""
+        cursor.execute(comando)
+        
+        comando_consulta = """SELECT * FROM catalogo_publico
+                              WHERE precio > 100;"""
+        cursor.execute(comando_consulta)
+        
+        datos = cursor.fetchall()
+        for dato in datos:
+            print(dato)
+            
+        conexion.commit()
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -727,4 +753,5 @@ if __name__ == "__main__":
     #segmentacion_campañas()
     #semaforo_inventario()
     #creando_indice()
-    buscador_web()
+    #buscador_web()
+    vista_catalogo_publico()
