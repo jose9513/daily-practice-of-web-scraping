@@ -694,6 +694,16 @@ def creando_indice():
         comando = "CREATE INDEX IF NOT EXISTS idx_ventas_joya ON ventas(id_joya)"
         cursor.execute(comando)
         print("Índice creado exitosamente para optimizar consultas entre ventas y joyas")
+        
+#-------------------------------------------------------------------------------------------------------
+
+def buscador_web():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """CREATE INDEX IF NOT EXISTS idx_busqueda_nombre ON joyas(nombre)"""
+        cursor.execute(comando)
+        print("Índice creado exitosamente para optimizar búsquedas por nombre")
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -716,4 +726,5 @@ if __name__ == "__main__":
     #productos_fracasos()
     #segmentacion_campañas()
     #semaforo_inventario()
-    creando_indice()
+    #creando_indice()
+    buscador_web()
