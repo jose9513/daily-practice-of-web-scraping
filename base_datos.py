@@ -730,6 +730,23 @@ def vista_catalogo_publico():
             print(dato)
             
         conexion.commit()
+        
+#-------------------------------------------------------------------------------------------------------
+
+def registro_venta_segura():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        try:
+            cursor.execute("BEGIN TRANSACTION;")
+            cursor.execute("UPDATE joyas SET stock = stock - 1 WHERE id_joya = ?", (2,))
+            cursor.execute("INSERT INTO ventas (id_joya, fecha) VALUES (?, date('now'))", (2,))
+            
+            conexion.commit()
+            print("Venta registrada con éxito.")
+        except Exception as error:
+            conexion.rollback()
+            print(f"Error al registrar la venta: {error}")
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -754,4 +771,5 @@ if __name__ == "__main__":
     #semaforo_inventario()
     #creando_indice()
     #buscador_web()
-    vista_catalogo_publico()
+    #vista_catalogo_publico()
+    registro_venta_segura()
