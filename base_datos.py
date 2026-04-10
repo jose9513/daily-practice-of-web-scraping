@@ -747,6 +747,18 @@ def registro_venta_segura():
         except Exception as error:
             conexion.rollback()
             print(f"Error al registrar la venta: {error}")
+            
+#-------------------------------------------------------------------------------------------------------
+
+def subida_precios():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando = """UPDATE joyas
+                     SET precio = precio * 1.10
+                     WHERE stock > 0"""
+        cursor.execute(comando)
+        print(f"Precios actualizados para {cursor.rowcount} joyas con stock mayor a 0")
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -772,4 +784,5 @@ if __name__ == "__main__":
     #creando_indice()
     #buscador_web()
     #vista_catalogo_publico()
-    registro_venta_segura()
+    #registro_venta_segura()
+    subida_precios()
