@@ -770,6 +770,23 @@ def limpieza_de_temporada():
                      WHERE nombre LIKE '%prueba%'"""
         cursor.execute(comando)
         print(f"Se eliminaron {cursor.rowcount} joyas de prueba del catálogo")
+        
+#-------------------------------------------------------------------------------------------------------
+
+def indice_de_tiempo():
+    with sql.connect("catalogo_bisuteria.db") as conexion:
+        cursor = conexion.cursor()
+        
+        comando_index = """CREATE INDEX IF NOT EXISTS idx_ventas_fecha ON ventas(fecha)"""
+        cursor.execute(comando_index)
+        
+        comando = """EXPLAIN QUERY PLAN SELECT * FROM ventas WHERE fecha = '2026-02-14'"""
+        cursor.execute(comando)
+        plan = cursor.fetchall()
+        print("Plan de ejecución para consulta por fecha:")
+        for row in plan:
+            print(row)
+
 
 if __name__ == "__main__":
     #modelos_menos_de_5()
@@ -797,4 +814,5 @@ if __name__ == "__main__":
     #vista_catalogo_publico()
     #registro_venta_segura()
     #subida_precios()
-    limpieza_de_temporada()
+    #limpieza_de_temporada()
+    indice_de_tiempo()
